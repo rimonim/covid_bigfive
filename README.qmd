@@ -212,8 +212,8 @@ OPN_PLOT
 ## Bonus Plots!
 
 ```{r}
-#| fig.width: 10
-#| fig.height: 8
+#| fig.width: 7.5
+#| fig.height: 6
 
 options(scipen = 999)
 library(hrbrthemes)
