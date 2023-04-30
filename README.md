@@ -256,3 +256,184 @@ OPN_PLOT
 ```
 
 ![](README_files/figure-commonmark/unnamed-chunk-5-5.png)
+
+## Bonus Plots!
+
+``` r
+options(scipen = 999)
+library(hrbrthemes)
+library(viridis)
+```
+
+    Loading required package: viridisLite
+
+``` r
+library(showtext)
+```
+
+    Loading required package: sysfonts
+
+    Loading required package: showtextdb
+
+``` r
+library(sysfonts)
+library(extrafont)
+```
+
+    Registering fonts with R
+
+
+    Attaching package: 'extrafont'
+
+    The following object is masked from 'package:showtextdb':
+
+        font_install
+
+``` r
+#------------------Extraversion--------------
+  ggplot(unified_data ,aes(x= EXT, y= growth, 
+                             size= n, fill=country)) +
+  geom_point(alpha=0.5, shape=21, color="black") +
+  scale_size(range = c(.9, 40), name="country's Cases",
+                labels = scales::comma, guide = FALSE) +
+ scale_fill_viridis(discrete=TRUE, guide=FALSE, option="B") +
+ggrepel::geom_text_repel(aes(label = country), size = 2) +
+scale_x_log10(label = scales::comma,expand = expansion(mult = c(0, .3)))+
+scale_y_log10(label = scales::comma,expand = expansion(mult = c(0, .3))) +
+ 
+theme_ipsum() +
+theme(text=element_text(family="notosans"),
+ legend.position="bottom") +
+  labs(title="Does Extraversion Scores Predict The Growth\n in COVID-19 Cases?",
+   x="Mean Extraversion", y="Increase in Cases Over 14 Days")+
+
+ggthemes::theme_economist() +
+theme(legend.text = element_text(size=10),
+ plot.title = element_text(size=23),
+axis.title.x = element_text(vjust = -0.8),
+axis.title.y = element_text(vjust = 0.8),
+ plot.caption = element_text(vjust = -1,size=9),
+legend.position = c(0.4,0.85))
+```
+
+    Warning: The `guide` argument in `scale_*()` cannot be `FALSE`. This was deprecated in
+    ggplot2 3.3.4.
+    ℹ Please use "none" instead.
+
+![](README_files/figure-commonmark/unnamed-chunk-6-1.png)
+
+``` r
+ #------------------Emotional Stability--------------
+ ggplot(unified_data ,aes(x= EST, y= growth, 
+                          size= n, fill=country)) +
+   geom_point(alpha=0.5, shape=21, color="black") +
+   scale_size(range = c(.9, 40), name="country's Cases",
+              labels = scales::comma, guide = FALSE) +
+   scale_fill_viridis(discrete=TRUE, guide=FALSE, option="B") +
+   ggrepel::geom_text_repel(aes(label = country), size = 2) +
+   scale_x_log10(label = scales::comma,expand = expansion(mult = c(0, .3)))+
+   scale_y_log10(label = scales::comma,expand = expansion(mult = c(0, .3))) +
+   
+   theme_ipsum() +
+   theme(text=element_text(family="notosans"),
+         legend.position="bottom") +
+   labs(title="Does Emotional Stability Scores Predict The Growth\n in COVID-19 Cases?",
+        x="Mean Emotional Stability", y="Increase in Cases Over 14 Days")+
+   
+   ggthemes::theme_economist() +
+   theme(legend.text = element_text(size=10),
+         plot.title = element_text(size=23),
+         axis.title.x = element_text(vjust = -0.8),
+         axis.title.y = element_text(vjust = 0.8),
+         plot.caption = element_text(vjust = -1,size=9),
+         legend.position = c(0.4,0.85))
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-6-2.png)
+
+``` r
+ #------------------Agreeableness--------------
+ ggplot(unified_data ,aes(x= AGR, y= growth, 
+                          size= n, fill=country)) +
+   geom_point(alpha=0.5, shape=21, color="black") +
+   scale_size(range = c(.9, 40), name="country's Cases",
+              labels = scales::comma, guide = FALSE) +
+   scale_fill_viridis(discrete=TRUE, guide=FALSE, option="B") +
+   ggrepel::geom_text_repel(aes(label = country), size = 2) +
+   scale_x_log10(label = scales::comma,expand = expansion(mult = c(0, .3)))+
+   scale_y_log10(label = scales::comma,expand = expansion(mult = c(0, .3))) +
+   
+   theme_ipsum() +
+   theme(text=element_text(family="notosans"),
+         legend.position="bottom") +
+   labs(title="Does Agreeableness Scores Predict The Growth\n in COVID-19 Cases?",
+        x="Mean Agreeableness", y="Increase in Cases Over 14 Days")+
+   
+   ggthemes::theme_economist() +
+   theme(legend.text = element_text(size=10),
+         plot.title = element_text(size=23),
+         axis.title.x = element_text(vjust = -0.8),
+         axis.title.y = element_text(vjust = 0.8),
+         plot.caption = element_text(vjust = -1,size=9),
+         legend.position = c(0.4,0.85))
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-6-3.png)
+
+``` r
+ #------------------Conscientiousness--------------
+ ggplot(unified_data ,aes(x= CSN, y= growth, 
+                          size= n, fill=country)) +
+   geom_point(alpha=0.5, shape=21, color="black") +
+   scale_size(range = c(.9, 40), name="country's Cases",
+              labels = scales::comma, guide = FALSE) +
+   scale_fill_viridis(discrete=TRUE, guide=FALSE, option="B") +
+   ggrepel::geom_text_repel(aes(label = country), size = 2) +
+   scale_x_log10(label = scales::comma,expand = expansion(mult = c(0, .3)))+
+   scale_y_log10(label = scales::comma,expand = expansion(mult = c(0, .3))) +
+   
+   theme_ipsum() +
+   theme(text=element_text(family="notosans"),
+         legend.position="bottom") +
+   labs(title="Does Conscientiousness Scores Predict The Growth\n in COVID-19 Cases?",
+        x="Mean Conscientiousness", y="Increase in Cases Over 14 Days")+
+   
+   ggthemes::theme_economist() +
+   theme(legend.text = element_text(size=10),
+         plot.title = element_text(size=23),
+         axis.title.x = element_text(vjust = -0.8),
+         axis.title.y = element_text(vjust = 0.8),
+         plot.caption = element_text(vjust = -1,size=9),
+         legend.position = c(0.4,0.85))
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-6-4.png)
+
+``` r
+ #------------------Openness--------------
+ ggplot(unified_data ,aes(x= OPN, y= growth, 
+                          size= n, fill=country)) +
+   geom_point(alpha=0.5, shape=21, color="black") +
+   scale_size(range = c(.9, 40), name="country's Cases",
+              labels = scales::comma, guide = FALSE) +
+   scale_fill_viridis(discrete=TRUE, guide=FALSE, option="B") +
+   ggrepel::geom_text_repel(aes(label = country), size = 2) +
+   scale_x_log10(label = scales::comma,expand = expansion(mult = c(0, .3)))+
+   scale_y_log10(label = scales::comma,expand = expansion(mult = c(0, .3))) +
+   
+   theme_ipsum() +
+   theme(text=element_text(family="notosans"),
+         legend.position="bottom") +
+   labs(title="Does Openness Scores Predict The Growth\n in COVID-19 Cases?",
+        x="Mean Openness", y="Increase in Cases Over 14 Days")+
+   
+   ggthemes::theme_economist() +
+   theme(legend.text = element_text(size=10),
+         plot.title = element_text(size=23),
+         axis.title.x = element_text(vjust = -0.8),
+         axis.title.y = element_text(vjust = 0.8),
+         plot.caption = element_text(vjust = -1,size=9),
+         legend.position = c(0.4,0.85))
+```
+
+![](README_files/figure-commonmark/unnamed-chunk-6-5.png)
