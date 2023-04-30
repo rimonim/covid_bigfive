@@ -1,7 +1,47 @@
-library(tidyverse)
-library(lubridate)
-library(ggpubr)
+COVID-19 and the Big 5 Personality Test
+================
 
+#### A Replication of <https://tylerburleigh.com/blog/covid-19-and-the-big-5-personality-test/>
+
+##### by Lital, Intithar, and Louis
+
+Tyler Burleigh poses the question: Does the growth in COVID-19 cases
+have anything to do with Big 5 Personality traits?
+
+Here we replicate his work in R, fixing some minor mistakes and adding a
+bonus visualization.
+
+``` r
+library(tidyverse)
+```
+
+    ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ✔ dplyr     1.1.2     ✔ readr     2.1.4
+    ✔ forcats   1.0.0     ✔ stringr   1.5.0
+    ✔ ggplot2   3.4.2     ✔ tibble    3.2.1
+    ✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+    ✔ purrr     1.0.1     
+    ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ✖ dplyr::filter() masks stats::filter()
+    ✖ dplyr::lag()    masks stats::lag()
+    ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
+library(lubridate)
+library(ggpubr) # for easy plotting later
+
+# load preprocessed data
+load("processed_data.RData")
+```
+
+## COVID Data Preprocessing
+
+Since the raw data is too large to upload to Github, the code here is
+just for display. The final preprocessed data can be found in
+`processed_data.RData`.
+
+``` r
+# Import Data
 covid <- read_csv("train.csv")
 
 # Select the columns we need
@@ -26,7 +66,11 @@ covid <- covid %>%
   # compute growth over 14 days
   mutate(growth = cases_day14 - cases_day1) %>% 
   drop_na()
+```
 
+## Big 5 Data Preprocessing
+
+``` r
 # Note: filepath should be changed as needed
 bigfive <- read_tsv("bigfive_data.csv")
 bigfive <- bigfive %>% select(EXT1:OPN10, country) %>% 
@@ -84,62 +128,73 @@ unified_data <- bigfive %>%
                              country == 'Korea, Republic of (South Korea)' ~ 'Korea, South',
                              .default = country)) %>% 
   right_join(covid)
+```
 
-# Example Plot
-unified_data %>% 
-  # MAKE SURE TO FILTER OUT ONLY n > 1000
-  filter(n > 1000) %>% 
-  ggplot(aes(EXT, growth)) +
-    geom_point(aes(size = n), color = 'orange') +
-    ggrepel::geom_text_repel(aes(label = country), size = 2) +
-    geom_smooth(method = 'lm', alpha = .2) +
-    theme_minimal() +
-    labs(x = "Mean Extraversion", y = "Increase in Cases Over 14 Days",
-         size = "Number of\nObservations")
+# Original Plots
 
-# PLOT
-# Create regression line plot for each trait
-
+``` r
 EXT_PLOT <- ggscatter(unified_data, x = "EXT", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Extraversion ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "EXT", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+EXT_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-4-1.png)
+
+``` r
 EST_PLOT <- ggscatter(unified_data, x = "EST", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Emotional Stability ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "EST", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+EST_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-4-2.png)
 
+``` r
 AGR_PLOT <- ggscatter(unified_data, x = "AGR", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Agreeableness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "AGR", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+AGR_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-4-3.png)
 
+``` r
 CSN_PLOT <- ggscatter(unified_data, x = "CSN", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Conscientiousness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "CSN", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+CSN_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-4-4.png)
+
+``` r
 OPN_PLOT <- ggscatter(unified_data, x = "OPN", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Openness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "OPN", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+OPN_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-4-5.png)
 
+# Original Plots, Now With Outliers Removed
 
-
+``` r
 # Lets drop China and USA (outliers) and plot again
 unified_data_without_china_usa <- unified_data %>% filter(!country %in% c('US', 'China'))
 
@@ -149,38 +204,55 @@ EXT_PLOT <- ggscatter(unified_data_without_china_usa, x = "EXT", y = "growth",
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "EXT", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+EXT_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-5-1.png)
+
+``` r
 EST_PLOT <- ggscatter(unified_data_without_china_usa, x = "EST", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Emotional Stability ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "EST", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+EST_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-5-2.png)
 
+``` r
 AGR_PLOT <- ggscatter(unified_data_without_china_usa, x = "AGR", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Agreeableness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "AGR", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+AGR_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-5-3.png)
 
+``` r
 CSN_PLOT <- ggscatter(unified_data_without_china_usa, x = "CSN", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Conscientiousness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "CSN", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+CSN_PLOT
+```
 
+![](README_files/figure-commonmark/unnamed-chunk-5-4.png)
+
+``` r
 OPN_PLOT <- ggscatter(unified_data_without_china_usa, x = "OPN", y = "growth", 
                       title = "Confirmed cases at 14 days after first 50 cases \nby average score on Big 5 factor Openness ", color = "steelblue",
                       add = "reg.line", conf.int = TRUE, 
                       cor.coef = TRUE, cor.method = "pearson",
                       xlab = "OPN", ylab = "ConfirmedCases",
                       add.params = list(color = "steelblue", fill = "lightblue"))
+OPN_PLOT
+```
 
-
-
-
-
+![](README_files/figure-commonmark/unnamed-chunk-5-5.png)
