@@ -130,7 +130,7 @@ unified_data <- bigfive %>%
   right_join(covid)
 ```
 
-# Original Plots
+## Original Plots
 
 ``` r
 EXT_PLOT <- ggscatter(unified_data, x = "EXT", y = "growth", 
@@ -192,7 +192,7 @@ OPN_PLOT
 
 ![](README_files/figure-commonmark/unnamed-chunk-4-5.png)
 
-# Original Plots, Now With Outliers Removed
+## Original Plots, Now With Outliers Removed
 
 ``` r
 # Lets drop China and USA (outliers) and plot again
